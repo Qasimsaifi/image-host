@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        h1{
+            text-align: center;
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .image-item {
+            margin: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .image-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-item img {
+            width: 23vw;
+            /* height: 200px; */
+            border: 2px solid #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .copy-feedback {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .image-item:hover .copy-feedback {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Storage</h1>
+    <div class="image-container" id="imageContainer">
+        <!-- Images will be added here dynamically -->
+    </div>
+
+    <script>
+        // Your JSON data containing image paths
+        const imageData = [
+            { path: 'blogicco.png' },
+            { path: 'NoteDesk.png' },
+            { path: 'portfoliov1.png' },
+            { path: 'techommerce.png' },
+            // Add more image objects as needed
+        ];
+
+        const imageContainer = document.getElementById('imageContainer');
+        const host = window.location.origin;
+
+        // Function to display images and copy full URL when clicked
+        function displayImages() {
+            imageData.forEach((image, index) => {
+                const imageItem = document.createElement('div');
+                imageItem.classList.add('image-item');
+                
+                const imgElement = document.createElement('img');
+                imgElement.src = `./images/${image.path}`;
+
+                // Add a click event listener to copy the full URL when clicked
+                imgElement.addEventListener('click', () => {
+                    const fullUrl = `${host}/images/${image.path}`;
+
+                    // Create a temporary input element to copy the full URL
+                    const tempInput = document.createElement('input');
+                    tempInput.value = fullUrl;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+
+                    // Display a copy feedback message
+                    const feedback = document.createElement('div');
+                    feedback.classList.add('copy-feedback');
+                    feedback.textContent = 'URL Copied!';
+                    imageItem.appendChild(feedback);
+
+                    // Remove the feedback message after a short delay
+                    setTimeout(() => {
+                        imageItem.removeChild(feedback);
+                    }, 1000);
+                });
+
+                imageItem.appendChild(imgElement);
+                imageContainer.appendChild(imageItem);
+            });
+        }
+
+        // Call the function to display images
+        displayImages();
+    </script>
+</body>
+</html>
